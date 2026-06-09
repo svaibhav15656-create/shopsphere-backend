@@ -6,3 +6,9 @@ spring:
   jpa:
     hibernate:
       ddl-auto: update
+      show-sql: true
+
+
+
+jwt:
+  secret: thisisaverylongsecretkeythatisatleast256bitslong123456789
