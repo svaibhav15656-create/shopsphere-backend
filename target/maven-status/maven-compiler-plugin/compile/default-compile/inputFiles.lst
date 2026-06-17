@@ -1,0 +1,15 @@
+C:\Users\hp\OneDrive\Desktop\shopsphere-backend\auth-service\src\main\java\com\vaibhavs_backend\proper_backend\entity\UniqueConstraints.java
+C:\Users\hp\OneDrive\Desktop\shopsphere-backend\auth-service\src\main\java\com\vaibhavs_backend\proper_backend\security\CustomUserDetailsService.java
+C:\Users\hp\OneDrive\Desktop\shopsphere-backend\auth-service\src\main\java\com\vaibhavs_backend\proper_backend\dto\LoginRequest.java
+C:\Users\hp\OneDrive\Desktop\shopsphere-backend\auth-service\src\main\java\com\vaibhavs_backend\proper_backend\dto\RegisterRequest.java
+C:\Users\hp\OneDrive\Desktop\shopsphere-backend\auth-service\src\main\java\com\vaibhavs_backend\proper_backend\security\JwtAuthFilter.java
+C:\Users\hp\OneDrive\Desktop\shopsphere-backend\auth-service\src\main\java\com\vaibhavs_backend\proper_backend\ProperBackendApplication.java
+C:\Users\hp\OneDrive\Desktop\shopsphere-backend\auth-service\src\main\java\com\vaibhavs_backend\proper_backend\service\AuthService.java
+C:\Users\hp\OneDrive\Desktop\shopsphere-backend\auth-service\src\main\java\com\vaibhavs_backend\proper_backend\security\JwtService.java
+C:\Users\hp\OneDrive\Desktop\shopsphere-backend\auth-service\src\main\java\com\vaibhavs_backend\proper_backend\entity\AllArgsContructor.java
+C:\Users\hp\OneDrive\Desktop\shopsphere-backend\auth-service\src\main\java\com\vaibhavs_backend\proper_backend\entity\Role.java
+C:\Users\hp\OneDrive\Desktop\shopsphere-backend\auth-service\src\main\java\com\vaibhavs_backend\proper_backend\controller\AuthController.java
+C:\Users\hp\OneDrive\Desktop\shopsphere-backend\auth-service\src\main\java\com\vaibhavs_backend\proper_backend\repository\UserRepository.java
+C:\Users\hp\OneDrive\Desktop\shopsphere-backend\auth-service\src\main\java\com\vaibhavs_backend\proper_backend\entity\NoArgsContructor.java
+C:\Users\hp\OneDrive\Desktop\shopsphere-backend\auth-service\src\main\java\com\vaibhavs_backend\proper_backend\security\SecurityConfig.java
+C:\Users\hp\OneDrive\Desktop\shopsphere-backend\auth-service\src\main\java\com\vaibhavs_backend\proper_backend\entity\User.java
