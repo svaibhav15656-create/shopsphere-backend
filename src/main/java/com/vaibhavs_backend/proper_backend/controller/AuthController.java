@@ -1,5 +1,6 @@
 package com.vaibhavs_backend.proper_backend.controller;
 import java.util.*;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -26,25 +27,26 @@ public class AuthController {
     private AuthService authseservice;
     @Autowired
     private UserRepository userRepository;
+
     @PostMapping("/register")
-    public ResponseEntity<String> register (@RequestBody RegisterRequest request) {
+    public ResponseEntity<Map<String, String>> register(@RequestBody RegisterRequest request) {
         String token = authseservice.register(request);
-        return ResponseEntity.ok("access token is"+token);
+        return ResponseEntity.ok(Map.of("token", token));
     }
+
     @PostMapping("/login")
-    public ResponseEntity<String> login(@RequestBody LoginRequest request){
-         String token = authseservice.login(request);
-    return ResponseEntity.ok("access token is"+token);
+    public ResponseEntity<Map<String, String>> login(@RequestBody LoginRequest request) {
+        String token = authseservice.login(request);
+        return ResponseEntity.ok(Map.of("token", token));
     }
+
     @GetMapping("/Users")
-    @PreAuthorize("hasAuthority('ADMIN')")
+    @PreAuthorize("isAuthenticated()")
     public ResponseEntity<List<UserResponse>> getAlluser() {
         List<User> users = userRepository.findAll();
-        List<UserResponse>response = users.stream()
+        List<UserResponse> response = users.stream()
             .map(user -> new UserResponse(user.getId(), user.getEmail(), user.getRole()))
             .toList();
         return ResponseEntity.ok(response);
     }
-    
-    
 }

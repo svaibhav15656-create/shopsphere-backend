@@ -21,24 +21,30 @@ public class JwtAuthFilter extends OncePerRequestFilter{
     @Autowired
     private CustomUserDetailsService customUserDetailsService;
     @Override
-    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
-        String authHeader = request.getHeader("Authorization");
-        if(authHeader == null ||  !authHeader.startsWith("Bearer ")){
-            filterChain.doFilter(request,response);
-            return;
-        }
-        String token = authHeader.substring(7);
-        String email = jwtservice.extractEmail(token);
-        if(email != null && SecurityContextHolder.getContext().getAuthentication() == null){
-            UserDetails userdetails = customUserDetailsService.loadUserByUsername(email);
-            if(jwtservice.isTokenValid(userdetails, token)){
-                UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(userdetails,null,userdetails.getAuthorities());
-                authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request)); 
-                SecurityContextHolder.getContext().setAuthentication(authToken);
-            }
-        }
-        filterChain.doFilter(request, response);
+protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
+    String authHeader = request.getHeader("Authorization");
+    System.out.println("AUTH HEADER: " + authHeader);
+    if(authHeader == null ||  !authHeader.startsWith("Bearer ")){
+        filterChain.doFilter(request,response);
+        return;
     }
+    String token = authHeader.substring(7);
+    String email = jwtservice.extractEmail(token);
+    System.out.println("EXTRACTED EMAIL: " + email);
+    if(email != null && SecurityContextHolder.getContext().getAuthentication() == null){
+        UserDetails userdetails = customUserDetailsService.loadUserByUsername(email);
+        System.out.println("LOADED USER AUTHORITIES: " + userdetails.getAuthorities());
+        if(jwtservice.isTokenValid(userdetails, token)){
+            System.out.println("TOKEN IS VALID - SETTING AUTHENTICATION");
+            UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(userdetails,null,userdetails.getAuthorities());
+            authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request)); 
+            SecurityContextHolder.getContext().setAuthentication(authToken);
+        } else {
+            System.out.println("TOKEN IS INVALID");
+        }
+    }
+    filterChain.doFilter(request, response);
+}
 }
     
     
