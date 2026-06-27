@@ -1,5 +1,7 @@
 package com.vaibhavs_backend.proper_backend.service;
 
+import java.util.Map;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -38,13 +40,15 @@ public class AuthService {
         userRepository.save(user);
         return jwtService.generateToken(user);
     }
-    public String login(LoginRequest loginRequest){
+    public Map<String,String> login(LoginRequest loginRequest){
         String email = loginRequest.getEmail();
         String password = loginRequest.getPassword();
         UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = new UsernamePasswordAuthenticationToken(email, password);
         authenticationManager.authenticate(usernamePasswordAuthenticationToken);
         User user = userRepository.findByEmail(email);
-        return jwtService.generateToken(user);
+        String accessToken = jwtService.generateToken(user);
+        String refreshToken= jwtService.generateRefreshToken(user);
+        return Map.of("accessToken", accessToken , "refreshToken" , refreshToken);
         
     }
     

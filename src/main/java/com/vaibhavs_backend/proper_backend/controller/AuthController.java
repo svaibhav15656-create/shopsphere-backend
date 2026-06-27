@@ -24,20 +24,19 @@ import com.vaibhavs_backend.proper_backend.dto.UserResponse;
 @RequestMapping("/api/auth")
 public class AuthController {
     @Autowired
-    private AuthService authseservice;
+    private AuthService authService;
     @Autowired
     private UserRepository userRepository;
 
     @PostMapping("/register")
     public ResponseEntity<Map<String, String>> register(@RequestBody RegisterRequest request) {
-        String token = authseservice.register(request);
+        String token = authService.register(request);
         return ResponseEntity.ok(Map.of("token", token));
-    }
-
+    }    
     @PostMapping("/login")
     public ResponseEntity<Map<String, String>> login(@RequestBody LoginRequest request) {
-        String token = authseservice.login(request);
-        return ResponseEntity.ok(Map.of("token", token));
+        Map<String, String> token = authService.login(request);
+        return ResponseEntity.ok(token);
     }
 
     @GetMapping("/Users")

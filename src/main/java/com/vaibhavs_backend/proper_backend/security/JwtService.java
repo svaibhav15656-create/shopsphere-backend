@@ -22,7 +22,7 @@ public class JwtService {
         return Jwts.builder()
         .subject(user.getEmail())
         .issuedAt(new Date())
-        .expiration(new Date(System.currentTimeMillis()+86400000))
+        .expiration(new Date(System.currentTimeMillis()+900000))
         .signWith(getSignKey())
         .compact();
     }
@@ -52,5 +52,13 @@ public class JwtService {
         .parseSignedClaims(token)
         .getPayload()
         .getSubject();
+    }
+    public  String generateRefreshToken(User user){
+        return Jwts.builder()
+        .subject(user.getEmail())
+        .issuedAt(new Date())
+        .expiration(new Date(System.currentTimeMillis()+ 604800000))
+        .signWith(getSignKey())
+        .compact();
     }
 }
