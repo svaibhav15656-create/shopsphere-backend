@@ -30,7 +30,7 @@ public class JwtService {
         String email = extractEmail(token);
         return email.equals(userdetails.getUsername()) && !isTokenExpired(token);
     }
-    private boolean isTokenExpired(String token) {
+    public boolean isTokenExpired(String token) {
         return extractExpiration(token).before(new Date());
     }
     private Date extractExpiration(String token){

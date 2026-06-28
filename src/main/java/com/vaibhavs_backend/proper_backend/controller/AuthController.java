@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.vaibhavs_backend.proper_backend.dto.LoginRequest;
+import com.vaibhavs_backend.proper_backend.dto.RefreshTokenRequest;
 import com.vaibhavs_backend.proper_backend.dto.RegisterRequest;
 import com.vaibhavs_backend.proper_backend.entity.User;
 import com.vaibhavs_backend.proper_backend.repository.UserRepository;
@@ -17,6 +18,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import com.vaibhavs_backend.proper_backend.dto.UserResponse;
+
 
 
 
@@ -48,4 +50,10 @@ public class AuthController {
             .toList();
         return ResponseEntity.ok(response);
     }
+    @PostMapping("/refresh")
+    public ResponseEntity<Map<String,String>> refresh(@RequestBody RefreshTokenRequest request) {
+        Map<String,String> token = authService.refresh(request);
+        return ResponseEntity.ok(token);
+    }
+    
 }

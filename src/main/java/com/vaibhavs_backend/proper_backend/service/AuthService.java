@@ -9,6 +9,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.vaibhavs_backend.proper_backend.dto.LoginRequest;
+import com.vaibhavs_backend.proper_backend.dto.RefreshTokenRequest;
 import com.vaibhavs_backend.proper_backend.dto.RegisterRequest;
 import com.vaibhavs_backend.proper_backend.entity.Role;
 import com.vaibhavs_backend.proper_backend.entity.User;
@@ -25,7 +26,6 @@ public class AuthService {
     private AuthenticationManager authenticationManager;
     @Autowired
     private JwtService jwtService;
-
 
     public  String  register(RegisterRequest registerRequest){
         String email = registerRequest.getEmail();
@@ -49,7 +49,16 @@ public class AuthService {
         String accessToken = jwtService.generateToken(user);
         String refreshToken= jwtService.generateRefreshToken(user);
         return Map.of("accessToken", accessToken , "refreshToken" , refreshToken);
-        
+    }
+    public Map<String,String>  refresh(RefreshTokenRequest request){
+        String token = request.getRefreshToken();
+        String email = jwtService.extractEmail(token);
+        User user = userRepository.findByEmail(email);
+        if(user != null && jwtService.isTokenValid(user, token)){
+            String newAccessToken = jwtService.generateToken(user);
+            return Map.of("accessToken", newAccessToken);
+        }
+        throw new RuntimeException("invalid refresh token");
     }
     
 }
