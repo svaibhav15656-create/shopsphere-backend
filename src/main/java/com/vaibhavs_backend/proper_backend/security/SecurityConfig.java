@@ -14,7 +14,11 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.access.AccessDeniedHandler;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.security.web.AuthenticationEntryPoint;
+
+import jakarta.servlet.http.HttpServletResponse;
 
 @Configuration
 @EnableWebSecurity
@@ -24,37 +28,64 @@ public class SecurityConfig {
     private JwtAuthFilter jwtauthfilter;
     @Autowired
     private CustomUserDetailsService customuserdeatilsservice;
-    
+
     @Bean
     public PasswordEncoder passwordEncoder(){
         return new BCryptPasswordEncoder();
     }
+
     @Bean
     public AuthenticationProvider authenticationProvider(){
-        DaoAuthenticationProvider  provider = new DaoAuthenticationProvider();
+        DaoAuthenticationProvider provider = new DaoAuthenticationProvider();
         provider.setUserDetailsService(customuserdeatilsservice);
         provider.setPasswordEncoder(passwordEncoder());
         return provider;
-
     }
+
     @Bean
-    public  AuthenticationManager authenticationManager(AuthenticationConfiguration config)throws Exception{
+    public AuthenticationManager authenticationManager(AuthenticationConfiguration config) throws Exception {
         return config.getAuthenticationManager();
     }
+
     @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http)throws Exception {
+    public AuthenticationEntryPoint authenticationEntryPoint() {
+        return (request, response, authException) -> {
+            response.setContentType("application/json");
+            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+            response.getWriter().write(
+                "{\"status\":401,\"error\":\"Unauthorized\",\"message\":\"Authentication required or token invalid\"}"
+            );
+        };
+    }
+
+    @Bean
+    public AccessDeniedHandler accessDeniedHandler() {
+        return (request, response, accessDeniedException) -> {
+            response.setContentType("application/json");
+            response.setStatus(HttpServletResponse.SC_FORBIDDEN);
+            response.getWriter().write(
+                "{\"status\":403,\"error\":\"Forbidden\",\"message\":\"You do not have permission to access this resource\"}"
+            );
+        };
+    }
+
+    @Bean
+    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
             .csrf(csrf -> csrf.disable())
             .authorizeHttpRequests(auth -> auth
                 .requestMatchers("/api/auth/register", "/api/auth/login", "/api/auth/refresh").permitAll()
                 .anyRequest().authenticated()
-
             )
             .sessionManagement(session -> session
-                .sessionCreationPolicy(SessionCreationPolicy.STATELESS) 
+                .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+            )
+            .exceptionHandling(exception -> exception
+                .authenticationEntryPoint(authenticationEntryPoint())
+                .accessDeniedHandler(accessDeniedHandler())
             )
             .authenticationProvider(authenticationProvider())
-            .addFilterBefore(jwtauthfilter,UsernamePasswordAuthenticationFilter.class);
-            return http.build();
+            .addFilterBefore(jwtauthfilter, UsernamePasswordAuthenticationFilter.class);
+        return http.build();
     }
 }
